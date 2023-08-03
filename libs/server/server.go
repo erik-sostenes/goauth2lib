@@ -1,14 +1,18 @@
 package server
 
 import (
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/erik-sostenes/goauth2lib/libs/server/route"
 )
 
+const defaultPort = "8080"
+
 type (
-	HandlerFunc func(http.HandlerFunc) http.HandlerFunc
-	Server      struct {
+	// Server contains all the settings for the server
+	Server struct {
 		http.Handler
 		route.RouteGroup
 	}
@@ -31,5 +35,11 @@ func New(groups ...route.RouteGroup) *Server {
 }
 
 func (s *Server) Start() error {
-	return http.ListenAndServe("localhost:8080", s.Handler)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
+
+	log.Printf("Server is running on port '%s'\n", port)
+	return http.ListenAndServe("localhost:"+port, s.Handler)
 }
