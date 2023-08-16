@@ -35,7 +35,7 @@ func (route *RouteCollection) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	subPath := path[index:]
 
 	if (*route)[rootPath] == nil || (*route)[rootPath][subPath] == nil {
-		response.JSON(w, http.StatusNotFound, response.Response{
+		_ = response.JSON(w, http.StatusNotFound, response.Response{
 			Message: fmt.Sprintf("the route was not found %s ", path),
 		})
 		return
@@ -44,7 +44,7 @@ func (route *RouteCollection) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 	handlerFunc := (*route)[rootPath][subPath][METHOD(r.Method)]
 
 	if handlerFunc == nil {
-		response.JSON(w, http.StatusMethodNotAllowed, response.Response{
+		_ = response.JSON(w, http.StatusMethodNotAllowed, response.Response{
 			Message: fmt.Sprintf("method %s is not allowed", r.Method),
 		})
 		return
